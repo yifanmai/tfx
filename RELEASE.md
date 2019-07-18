@@ -2,6 +2,8 @@
 
 ## Major Features and Improvements
 
+*   Added Iris flowers classification example.
+
 ## Bug fixes and other changes
 
 ### Deprecations
