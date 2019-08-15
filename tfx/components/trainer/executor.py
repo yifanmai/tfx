@@ -35,7 +35,7 @@ from google.protobuf import json_format
 
 
 def _all_files_pattern(file_pattern: Text) -> Text:
-  return '{}*'.format(file_pattern)
+  return os.path.join(file_pattern, '*')
 
 
 class Executor(base_executor.BaseExecutor):

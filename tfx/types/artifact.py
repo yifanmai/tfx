@@ -63,9 +63,7 @@ class Artifact(object):
 
   TYPE_NAME = None
 
-  def __init__(self,
-               type_name: Optional[Text] = None,
-               split: Optional[Text] = ''):
+  def __init__(self, type_name: Optional[Text] = None):
     """Construct an instance of Artifact.
 
     Used by TFX internal implementation: create an empty Artifact with
@@ -77,7 +75,6 @@ class Artifact(object):
     Args:
       type_name: Name of underlying ArtifactType (optional if the ARTIFACT_TYPE
         field is provided for the Artifact subclass).
-      split: Which split this instance of artifact maps to.
     """
     # TODO(b/138664975): either deprecate or remove string-based artifact type
     # definition before 0.14.0 release.
@@ -110,7 +107,7 @@ class Artifact(object):
     artifact_type.properties['span'] = metadata_store_pb2.INT
     # Comma separated splits recognized. Empty string means artifact has no
     # split.
-    artifact_type.properties['split'] = metadata_store_pb2.STRING
+    artifact_type.properties['split_names'] = metadata_store_pb2.STRING
     # TODO(b/135056715): Rely on MLMD context for pipeline grouping for
     # artifacts once it's ready.
     # The name of the pipeline that produces the artifact.
@@ -125,13 +122,12 @@ class Artifact(object):
 
     artifact = metadata_store_pb2.Artifact()
     artifact.properties['type_name'].string_value = type_name
-    artifact.properties['split'].string_value = split
 
     self.artifact = artifact
 
   def __repr__(self):
-    return 'Artifact(type_name: {}, uri: {}, split: {}, id: {})'.format(
-        self.artifact_type.name, self.uri, str(self.split), str(self.id))
+    return 'Artifact(type_name: {}, uri: {}, id: {})'.format(
+        self.artifact_type.name, self.uri, str(self.id))
 
   def json_dict(self) -> Dict[Text, Any]:
     """Returns a dict suitable for json serialization."""
@@ -210,14 +206,14 @@ class Artifact(object):
     self.artifact.properties['state'].string_value = state
 
   @property
-  def split(self) -> Text:
+  def split_names(self) -> Text:
     """Split of the underlying artifact is in."""
-    return self.artifact.properties['split'].string_value
+    return self.artifact.properties['split_names'].string_value
 
-  @split.setter
-  def split(self, split: Text):
+  @split_names.setter
+  def split_names(self, split_names: Text):
     """Set state of the underlying artifact."""
-    self.artifact.properties['split'].string_value = split
+    self.artifact.properties['split_names'].string_value = split_names
 
   @property
   def pipeline_name(self) -> Text:

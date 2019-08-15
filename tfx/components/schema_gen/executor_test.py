@@ -19,7 +19,6 @@ from __future__ import print_function
 
 import os
 import tensorflow as tf
-from tfx import types
 from tfx.components.schema_gen import executor
 from tfx.types import standard_artifacts
 
@@ -30,9 +29,9 @@ class ExecutorTest(tf.test.TestCase):
     source_data_dir = os.path.join(
         os.path.dirname(os.path.dirname(__file__)), 'testdata')
 
-    train_stats_artifact = types.Artifact('ExampleStatsPath', split='train')
-    train_stats_artifact.uri = os.path.join(source_data_dir,
-                                            'statistics_gen/train/')
+    stats_artifact = standard_artifacts.ExampleStatistics()
+    stats_artifact.uri = os.path.join(source_data_dir, 'statistics_gen')
+    stats_artifact.split_names = 'train'
 
     output_data_dir = os.path.join(
         os.environ.get('TEST_UNDECLARED_OUTPUTS_DIR', self.get_temp_dir()),
@@ -42,7 +41,7 @@ class ExecutorTest(tf.test.TestCase):
     schema_output.uri = os.path.join(output_data_dir, 'schema_output')
 
     input_dict = {
-        'stats': [train_stats_artifact],
+        'stats': [stats_artifact],
     }
     output_dict = {
         'output': [schema_output],

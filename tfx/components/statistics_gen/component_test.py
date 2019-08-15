@@ -26,10 +26,10 @@ from tfx.types import standard_artifacts
 class ComponentTest(tf.test.TestCase):
 
   def testConstruct(self):
-    train_examples = standard_artifacts.Examples(split='train')
-    eval_examples = standard_artifacts.Examples(split='eval')
+    examples = standard_artifacts.Examples()
+    examples.split_names = 'train,eval'
     statistics_gen = component.StatisticsGen(
-        input_data=channel_utils.as_channel([train_examples, eval_examples]))
+        input_data=channel_utils.as_channel([examples]))
     self.assertEqual('ExampleStatisticsPath',
                      statistics_gen.outputs.output.type_name)
 

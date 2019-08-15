@@ -53,30 +53,27 @@ class ExecutorTest(absltest.TestCase):
     tf.gfile.MakeDirs(output_data_dir)
 
     # Create input dict.
-    train_examples = standard_artifacts.Examples(split='train')
-    train_examples.uri = os.path.join(source_data_dir, 'csv_example_gen/train/')
-    eval_examples = standard_artifacts.Examples(split='eval')
-    eval_examples.uri = os.path.join(source_data_dir, 'csv_example_gen/eval/')
+    examples = standard_artifacts.Examples()
+    examples.uri = os.path.join(source_data_dir, 'csv_example_gen')
+    examples.split_names = 'train,eval'
 
-    train_stats = standard_artifacts.ExampleStatistics(split='train')
-    train_stats.uri = os.path.join(output_data_dir, 'train', '')
-    eval_stats = standard_artifacts.ExampleStatistics(split='eval')
-    eval_stats.uri = os.path.join(output_data_dir, 'eval', '')
-    input_dict = {
-        'input_data': [train_examples, eval_examples],
-    }
+    stats = standard_artifacts.ExampleStatistics()
+    stats.uri = output_data_dir
+    stats.split_names = 'train,eval'
 
-    output_dict = {
-        'output': [train_stats, eval_stats],
-    }
+    input_dict = {'input_data': [examples]}
+    output_dict = {'output': [stats]}
 
     # Run executor.
     evaluator = executor.Executor()
     evaluator.Do(input_dict, output_dict, exec_properties={})
 
     # Check statistics_gen outputs.
-    self._validate_stats_output(os.path.join(train_stats.uri, 'stats_tfrecord'))
-    self._validate_stats_output(os.path.join(eval_stats.uri, 'stats_tfrecord'))
+    self._validate_stats_output(
+        os.path.join(stats.uri, 'train', 'stats_tfrecord'))
+    self._validate_stats_output(
+        os.path.join(stats.uri, 'eval', 'stats_tfrecord'))
+
 
 if __name__ == '__main__':
   absltest.main()

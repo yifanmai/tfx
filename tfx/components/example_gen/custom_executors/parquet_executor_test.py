@@ -61,11 +61,10 @@ class ExecutorTest(tf.test.TestCase):
         self._testMethodName)
 
     # Create output dict.
-    train_examples = standard_artifacts.Examples(split='train')
-    train_examples.uri = os.path.join(output_data_dir, 'train')
-    eval_examples = standard_artifacts.Examples(split='eval')
-    eval_examples.uri = os.path.join(output_data_dir, 'eval')
-    output_dict = {'examples': [train_examples, eval_examples]}
+    examples = standard_artifacts.Examples()
+    examples.uri = output_data_dir
+    examples.split_names = 'train,eval'
+    output_dict = {'examples': [examples]}
 
     # Create exec proterties.
     exec_properties = {
@@ -91,9 +90,9 @@ class ExecutorTest(tf.test.TestCase):
     parquet_example_gen.Do(self._input_dict, output_dict, exec_properties)
 
     # Check Parquet example gen outputs.
-    train_output_file = os.path.join(train_examples.uri,
+    train_output_file = os.path.join(examples.uri, 'train',
                                      'data_tfrecord-00000-of-00001.gz')
-    eval_output_file = os.path.join(eval_examples.uri,
+    eval_output_file = os.path.join(examples.uri, 'eval',
                                     'data_tfrecord-00000-of-00001.gz')
     self.assertTrue(tf.gfile.Exists(train_output_file))
     self.assertTrue(tf.gfile.Exists(eval_output_file))

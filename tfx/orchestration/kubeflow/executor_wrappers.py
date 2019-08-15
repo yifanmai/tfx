@@ -108,8 +108,7 @@ class KubeflowExecutorWrapper(utils.with_metaclass(abc.ABCMeta), object):
       for output_artifact in output_artifact_list:
         output_artifact.uri = os.path.join(self._output_dir,
                                            self._component_name, output_name,
-                                           self._workflow_id,
-                                           output_artifact.split, '')
+                                           self._workflow_id)
         output_artifact.span = max_input_span
 
   def run(self, output_basedir: Text = '/'):

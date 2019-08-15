@@ -28,10 +28,9 @@ class ComponentTest(tf.test.TestCase):
 
   def setUp(self):
     super(ComponentTest, self).setUp()
-    self.input_data = channel_utils.as_channel([
-        standard_artifacts.Examples(split='train'),
-        standard_artifacts.Examples(split='eval'),
-    ])
+    examples = standard_artifacts.Examples()
+    examples.split_names = 'train,eval'
+    self.input_data = channel_utils.as_channel([examples])
     self.schema = channel_utils.as_channel(
         [types.Artifact(type_name='SchemaPath')])
 

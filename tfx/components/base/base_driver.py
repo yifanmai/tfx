@@ -45,14 +45,12 @@ def _verify_input_artifacts(
         raise RuntimeError('Artifact uri %s is missing' % artifact.uri)
 
 
-def _generate_output_uri(artifact: types.Artifact, base_output_dir: Text,
-                         name: Text, execution_id: int) -> Text:
+def _generate_output_uri(base_output_dir: Text, name: Text,
+                         execution_id: int) -> Text:
   """Generate uri for output artifact."""
 
-  # Generates outputs uri based on execution id and optional split.
-  # Last empty string forces this be to a directory.
-  uri = os.path.join(base_output_dir, name, str(execution_id), artifact.split,
-                     '')
+  # Generates output uri based on execution id.
+  uri = os.path.join(base_output_dir, name, str(execution_id))
   if tf.gfile.Exists(uri):
     msg = 'Output artifact uri %s already exists' % uri
     tf.logging.error(msg)
@@ -178,8 +176,7 @@ class BaseDriver(object):
                                    component_info.component_id)
     for name, output_list in result.items():
       for artifact in output_list:
-        artifact.uri = _generate_output_uri(artifact, base_output_dir, name,
-                                            execution_id)
+        artifact.uri = _generate_output_uri(base_output_dir, name, execution_id)
     return result
 
   def _fetch_cached_artifacts(

@@ -83,6 +83,7 @@
     TFX component's ComponentSpec definition in `types.standard_component_specs`
     and the definition of built-in Artifact types in
     `types.standard_artifacts`).
+*   A single artifact is now published for all splits output by a component.
 *   The "outputs" argument, which is used to override the automatically-
     generated output Channels for each component class has been removed; the
     equivalent overriding functionality is now available by specifying optional

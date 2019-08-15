@@ -37,11 +37,11 @@ class ExecutorTest(tf.test.TestCase):
     self.component_id = 'test_component'
 
     # Create input dict.
-    eval_examples = standard_artifacts.Examples(split='eval')
-    eval_examples.uri = os.path.join(self._source_data_dir,
-                                     'csv_example_gen/eval/')
+    eval_examples = standard_artifacts.Examples()
+    eval_examples.uri = os.path.join(self._source_data_dir, 'csv_example_gen')
+    eval_examples.split_names = 'eval'
     model = standard_artifacts.Model()
-    model.uri = os.path.join(self._source_data_dir, 'trainer/current/')
+    model.uri = os.path.join(self._source_data_dir, 'trainer/current')
     self._input_dict = {
         'examples': [eval_examples],
         'model': [model],
@@ -62,12 +62,9 @@ class ExecutorTest(tf.test.TestCase):
   def testDoWithBlessedModel(self):
     # Create exe properties.
     exec_properties = {
-        'blessed_model':
-            os.path.join(self._source_data_dir, 'trainer/blessed/'),
-        'blessed_model_id':
-            123,
-        'component_id':
-            self.component_id,
+        'blessed_model': os.path.join(self._source_data_dir, 'trainer/blessed'),
+        'blessed_model_id': 123,
+        'component_id': self.component_id,
     }
 
     # Run executor.

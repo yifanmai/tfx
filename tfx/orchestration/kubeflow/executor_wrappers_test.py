@@ -45,20 +45,21 @@ def _locate_setup_file_dir() -> Text:
 class ExecutorWrappersTest(tf.test.TestCase):
 
   def setUp(self):
+    super(ExecutorWrappersTest, self).setUp()
     self.exec_properties = {
         'beam_pipeline_args': ['--some_flag=foo'],
         'input': json.dumps({}),
         'output': json.dumps({}),
         'output_dir': '/path/to/output',
     }
-    self.examples = [standard_artifacts.Examples(split='dummy')]
+    self.examples = [standard_artifacts.Examples()]
     self.output_basedir = tempfile.mkdtemp()
 
     os.environ['WORKFLOW_ID'] = 'mock_workflow_id'
     os.environ['TFX_SRC_DIR'] = _locate_setup_file_dir()
 
   def testCsvExampleGenWrapper(self):
-    input_base = standard_artifacts.ExternalArtifact(split='')
+    input_base = standard_artifacts.ExternalArtifact()
     input_base.uri = '/path/to/dataset'
 
     with patch.object(executor, 'Executor', autospec=True) as _:
@@ -78,11 +79,11 @@ class ExecutorWrappersTest(tf.test.TestCase):
       metadata_file = os.path.join(
           self.output_basedir, 'output/ml_metadata/examples')
 
-      expected_output_examples = standard_artifacts.Examples(split='dummy')
+      expected_output_examples = standard_artifacts.Examples()
       # Expect that span and path are resolved.
       expected_output_examples.span = 1
       expected_output_examples.uri = (
-          '/path/to/output/csv_example_gen/examples/mock_workflow_id/dummy/')
+          '/path/to/output/csv_example_gen/examples/mock_workflow_id')
 
       with tf.gfile.GFile(metadata_file) as f:
         self.assertEqual(

@@ -29,8 +29,8 @@ class ComponentTest(tf.test.TestCase):
     self.assertEqual('ExamplesPath',
                      big_query_example_gen.outputs.examples.type_name)
     artifact_collection = big_query_example_gen.outputs.examples.get()
-    self.assertEqual('train', artifact_collection[0].split)
-    self.assertEqual('eval', artifact_collection[1].split)
+    self.assertEqual(1, len(artifact_collection))
+    self.assertEqual('train,eval', artifact_collection[0].split_names)
 
   def testConstructWithOutputConfig(self):
     big_query_example_gen = component.BigQueryExampleGen(
@@ -44,9 +44,8 @@ class ComponentTest(tf.test.TestCase):
     self.assertEqual('ExamplesPath',
                      big_query_example_gen.outputs.examples.type_name)
     artifact_collection = big_query_example_gen.outputs.examples.get()
-    self.assertEqual('train', artifact_collection[0].split)
-    self.assertEqual('eval', artifact_collection[1].split)
-    self.assertEqual('test', artifact_collection[2].split)
+    self.assertEqual(1, len(artifact_collection))
+    self.assertEqual('train,eval,test', artifact_collection[0].split_names)
 
   def testConstructWithInputConfig(self):
     big_query_example_gen = component.BigQueryExampleGen(
@@ -58,9 +57,8 @@ class ComponentTest(tf.test.TestCase):
     self.assertEqual('ExamplesPath',
                      big_query_example_gen.outputs.examples.type_name)
     artifact_collection = big_query_example_gen.outputs.examples.get()
-    self.assertEqual('train', artifact_collection[0].split)
-    self.assertEqual('eval', artifact_collection[1].split)
-    self.assertEqual('test', artifact_collection[2].split)
+    self.assertEqual(1, len(artifact_collection))
+    self.assertEqual('train,eval,test', artifact_collection[0].split_names)
 
 
 if __name__ == '__main__':

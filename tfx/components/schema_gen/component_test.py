@@ -26,9 +26,10 @@ from tfx.types import standard_artifacts
 class SchemaGenTest(tf.test.TestCase):
 
   def testConstruct(self):
+    stats_artifact = standard_artifacts.ExampleStatistics()
+    stats_artifact.split_names = 'train'
     schema_gen = component.SchemaGen(
-        stats=channel_utils.as_channel(
-            [standard_artifacts.ExampleStatistics(split='train')]))
+        stats=channel_utils.as_channel([stats_artifact]))
     self.assertEqual('SchemaPath', schema_gen.outputs.output.type_name)
 
 

@@ -32,8 +32,8 @@ class ComponentTest(tf.test.TestCase):
     self.assertEqual('ExamplesPath',
                      csv_example_gen.outputs.examples.type_name)
     artifact_collection = csv_example_gen.outputs.examples.get()
-    self.assertEqual('train', artifact_collection[0].split)
-    self.assertEqual('eval', artifact_collection[1].split)
+    self.assertEqual(1, len(artifact_collection))
+    self.assertEqual('train,eval', artifact_collection[0].split_names)
 
 
 if __name__ == '__main__':

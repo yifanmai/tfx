@@ -37,13 +37,13 @@ class ExecutorTest(tf.test.TestCase):
         self._testMethodName)
 
     # Create input dict.
-    train_examples = standard_artifacts.Examples(split='train')
-    eval_examples = standard_artifacts.Examples(split='eval')
-    eval_examples.uri = os.path.join(source_data_dir, 'csv_example_gen/eval/')
+    examples = standard_artifacts.Examples()
+    examples.uri = os.path.join(source_data_dir, 'csv_example_gen')
+    examples.split_names = 'train,eval'
     model_exports = standard_artifacts.Model()
-    model_exports.uri = os.path.join(source_data_dir, 'trainer/current/')
+    model_exports.uri = os.path.join(source_data_dir, 'trainer/current')
     input_dict = {
-        'examples': [train_examples, eval_examples],
+        'examples': [examples],
         'model_exports': [model_exports],
     }
 

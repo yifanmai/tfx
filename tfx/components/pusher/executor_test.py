@@ -37,7 +37,7 @@ class ExecutorTest(tf.test.TestCase):
     tf.gfile.MakeDirs(self._output_data_dir)
     self._model_export = standard_artifacts.Model()
     self._model_export.uri = os.path.join(self._source_data_dir,
-                                          'trainer/current/')
+                                          'trainer/current')
     self._model_blessing = standard_artifacts.ModelBlessing()
     self._input_dict = {
         'model_export': [self._model_export],
@@ -64,7 +64,7 @@ class ExecutorTest(tf.test.TestCase):
 
   def testDoBlessed(self):
     self._model_blessing.uri = os.path.join(self._source_data_dir,
-                                            'model_validator/blessed/')
+                                            'model_validator/blessed')
     self._executor.Do(self._input_dict, self._output_dict,
                       self._exec_properties)
     self.assertNotEqual(0, len(tf.gfile.ListDirectory(self._serving_model_dir)))
@@ -74,7 +74,7 @@ class ExecutorTest(tf.test.TestCase):
 
   def testDoNotBlessed(self):
     self._model_blessing.uri = os.path.join(self._source_data_dir,
-                                            'model_validator/not_blessed/')
+                                            'model_validator/not_blessed')
     self._executor.Do(self._input_dict, self._output_dict,
                       self._exec_properties)
     self.assertEqual(0, len(tf.gfile.ListDirectory(self._serving_model_dir)))

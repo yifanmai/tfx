@@ -38,20 +38,18 @@ class ExecutorTest(tf.test.TestCase):
         self._testMethodName)
 
     # Create input dict.
-    train_examples = standard_artifacts.Examples(split='train')
-    train_examples.uri = os.path.join(self._source_data_dir,
-                                      'transform/transformed_examples/train/')
-    eval_examples = standard_artifacts.Examples(split='eval')
-    eval_examples.uri = os.path.join(self._source_data_dir,
-                                     'transform/transformed_examples/eval/')
+    examples = standard_artifacts.Examples()
+    examples.uri = os.path.join(self._source_data_dir,
+                                'transform/transformed_examples')
+    examples.split_names = 'train,eval'
     transform_output = standard_artifacts.TransformGraph()
     transform_output.uri = os.path.join(self._source_data_dir,
-                                        'transform/transform_output/')
+                                        'transform/transform_output')
     schema = standard_artifacts.Examples()
-    schema.uri = os.path.join(self._source_data_dir, 'schema_gen/')
+    schema.uri = os.path.join(self._source_data_dir, 'schema_gen')
 
     self._input_dict = {
-        'examples': [train_examples, eval_examples],
+        'examples': [examples],
         'transform_output': [transform_output],
         'schema': [schema],
     }

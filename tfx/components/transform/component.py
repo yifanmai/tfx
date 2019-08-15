@@ -21,6 +21,7 @@ from tfx import types
 from tfx.components.base import base_component
 from tfx.components.transform import executor
 from tfx.types import artifact
+from tfx.types import artifact_utils
 from tfx.types import standard_artifacts
 from tfx.types.standard_component_specs import TransformSpec
 
@@ -93,12 +94,12 @@ class Transform(base_component.BaseComponent):
     transform_output = transform_output or types.Channel(
         type=standard_artifacts.TransformGraph,
         artifacts=[standard_artifacts.TransformGraph()])
-    transformed_examples = transformed_examples or types.Channel(
-        type=standard_artifacts.Examples,
-        artifacts=[
-            standard_artifacts.Examples(split=split)
-            for split in artifact.DEFAULT_EXAMPLE_SPLITS
-        ])
+    if not transformed_examples:
+      example_artifact = standard_artifacts.Examples()
+      example_artifact.split_names = artifact_utils.encode_split_names(
+          artifact.DEFAULT_EXAMPLE_SPLITS)
+      transformed_examples = types.Channel(
+          type=standard_artifacts.Examples, artifacts=[example_artifact])
     spec = TransformSpec(
         input_data=input_data,
         schema=schema,

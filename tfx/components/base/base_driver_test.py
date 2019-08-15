@@ -45,16 +45,14 @@ class BaseDriverTest(tf.test.TestCase):
     for key, input_channel in self._input_dict.items():
       for index, artifact in enumerate(input_channel.get()):
         artifact.id = index + 1
-        uri = os.path.join(input_dir, key, str(artifact.id), '')
+        uri = os.path.join(input_dir, key, str(artifact.id))
         artifact.uri = uri
         tf.gfile.MakeDirs(uri)
     self._output_dict = {
         'output_data':
             types.Channel(
                 type_name='output_data',
-                artifacts=[
-                    types.Artifact(type_name='output_data', split='split')
-                ])
+                artifacts=[types.Artifact(type_name='output_data')])
     }
     self._input_artifacts = channel_utils.unwrap_channel_dict(self._input_dict)
     self._output_artifacts = {
@@ -79,7 +77,7 @@ class BaseDriverTest(tf.test.TestCase):
         'output_a':
             types.Channel(
                 type_name='output_a',
-                artifacts=[types.Artifact(type_name='output_a', split='split')])
+                artifacts=[types.Artifact(type_name='output_a')])
     }
     execution_id = 1
     exec_properties = copy.deepcopy(self._exec_properties)
@@ -109,7 +107,7 @@ class BaseDriverTest(tf.test.TestCase):
     self.assertEqual(
         execution_decision.output_dict['output_a'][0].uri,
         os.path.join(pipeline_info.pipeline_root, component_info.component_id,
-                     'output_a', str(execution_id), 'split', ''))
+                     'output_a', str(execution_id)))
 
   @mock.patch(
       'tfx.components.base.base_driver._verify_input_artifacts'
@@ -125,7 +123,7 @@ class BaseDriverTest(tf.test.TestCase):
         'output_a':
             types.Channel(
                 type_name='output_a',
-                artifacts=[types.Artifact(type_name='output_a', split='split')])
+                artifacts=[types.Artifact(type_name='output_a')])
     }
     execution_id = 1
     exec_properties = copy.deepcopy(self._exec_properties)
