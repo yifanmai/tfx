@@ -594,10 +594,12 @@ class Executor(base_executor.BaseExecutor):
         for dataset in analyze_data_list
     }
     if input_cache_dir is not None:
-      input_cache = pipeline | analyzer_cache.ReadAnalysisCacheFromFS(
-          input_cache_dir,
-          list(analysis_key_to_dataset.keys()),
-          source=cache_source)
+      input_cache = (
+          pipeline
+          | 'ReadAnalysisCacheFromFS' >> analyzer_cache.ReadAnalysisCacheFromFS(
+              input_cache_dir,
+              list(analysis_key_to_dataset.keys()),
+              source=cache_source))
     elif output_cache_dir is not None:
       input_cache = {}
     else:
@@ -856,14 +858,16 @@ class Executor(base_executor.BaseExecutor):
         # pylint: disable=no-value-for-parameter
 
         _ = (
-            p | self._IncrementColumnUsageCounter(
+            p |
+            'IncrementColumnUsageCounter' >> self._IncrementColumnUsageCounter(
                 len(feature_spec.keys()), len(analyze_input_columns),
                 len(transform_input_columns)))
 
         (new_analyze_data_dict, input_cache, flat_data_required) = (
-            p | self._OptimizeRun(input_cache_dir, output_cache_dir,
-                                  analyze_data_list, feature_spec,
-                                  preprocessing_fn, self._GetCacheSource()))
+            p | 'OptimizeRun' >> self._OptimizeRun(
+                input_cache_dir, output_cache_dir, analyze_data_list,
+                feature_spec, preprocessing_fn, self._GetCacheSource()))
+
         # Removing unneeded datasets if they won't be needed for statistics or
         # materialization.
         if not materialize_output_paths and not compute_statistics:
@@ -883,12 +887,13 @@ class Executor(base_executor.BaseExecutor):
                                     analyze_input_dataset_metadata.schema))
 
         for (idx, dataset) in enumerate(analyze_data_list):
+          infix = 'Index{}'.format(idx)
           dataset.encoded = (
-              p | 'ReadAnalysisDataset[{}]'.format(idx) >>
+              p | 'ReadAnalysisDataset[{}]'.format(infix) >>
               self._ReadExamples(dataset))
           dataset.decoded = (
               dataset.encoded
-              | 'DecodeAnalysisDataset[{}]'.format(idx) >>
+              | 'DecodeAnalysisDataset[{}]'.format(infix) >>
               self._DecodeInputs(analyze_decode_fn))
 
         input_analysis_data = {}
@@ -973,25 +978,26 @@ class Executor(base_executor.BaseExecutor):
           # cost to read the same dataset (analyze_data_list) again here to
           # prevent certain beam runner from doing large temp materialization.
           for (idx, dataset) in enumerate(transform_data_list):
+            infix = 'Index{}'.format(idx)
             dataset.encoded = (
                 p
-                | 'ReadTransformDataset[{}]'.format(idx) >>
+                | 'ReadTransformDataset[{}]'.format(infix) >>
                 self._ReadExamples(dataset))
             dataset.decoded = (
                 dataset.encoded
-                | 'DecodeTransformDataset[{}]'.format(idx) >>
+                | 'DecodeTransformDataset[{}]'.format(infix) >>
                 self._DecodeInputs(transform_decode_fn))
             (dataset.transformed,
              metadata) = (((dataset.decoded, transform_input_dataset_metadata),
                            transform_fn)
-                          | 'TransformDataset[{}]'.format(idx) >>
+                          | 'TransformDataset[{}]'.format(infix) >>
                           tft_beam.TransformDataset())
 
             if materialize_output_paths or not stats_use_tfdv:
               dataset.transformed_and_encoded = (
                   dataset.transformed
-                  | 'EncodeTransformedDataset[{}]'.format(idx) >> beam.ParDo(
-                      self._EncodeAsExamples(), metadata))
+                  | 'EncodeTransformedDataset[{}]'.format(infix) >>
+                  beam.ParDo(self._EncodeAsExamples(), metadata))
 
           if compute_statistics:
             # Aggregated feature stats after transformation.
@@ -1022,12 +1028,13 @@ class Executor(base_executor.BaseExecutor):
               # below.
               bundles = zip(transform_data_list, per_set_stats_output_paths)
               for (idx, (dataset, output_path)) in enumerate(bundles):
+                infix = 'Index{}'.format(idx)
                 if stats_use_tfdv:
                   data = dataset.transformed
                 else:
                   data = dataset.transformed_and_encoded
                 (data
-                 | 'GeneratePostTransformStats[{}]'.format(idx) >>
+                 | 'GeneratePostTransformStats[{}]'.format(infix) >>
                  self._GenerateStats(
                      output_path,
                      transformed_schema_proto,
@@ -1037,8 +1044,9 @@ class Executor(base_executor.BaseExecutor):
             assert len(transform_data_list) == len(materialize_output_paths)
             bundles = zip(transform_data_list, materialize_output_paths)
             for (idx, (dataset, output_path)) in enumerate(bundles):
+              infix = 'Index{}'.format(idx)
               (dataset.transformed_and_encoded
-               | 'Materialize[{}]'.format(idx) >> self._WriteExamples(
+               | 'Materialize[{}]'.format(infix) >> self._WriteExamples(
                    raw_examples_file_format, output_path))
 
     return _Status.OK()
