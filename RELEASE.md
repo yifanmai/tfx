@@ -3,6 +3,9 @@
 ## Major Features and Improvements
 
 ## Bug fixes and other changes
+*   Updated Chicago Taxi example dependencies to TODO(kcweaver)
+*   Updated Chicago Taxi example dependencies to Beam 2.14.0, Flink 1.8.1, Spark
+    2.4.3.
 
 ### Deprecations
 
