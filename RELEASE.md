@@ -46,6 +46,7 @@
 *   Enabled SchemaGen to infer feature shape.
 *   Enabled metadata logging and pipeline caching capability for KubeflowRunner.
 *   Used custom container for AI Platform Trainer extension.
+*   Added conceptual info on Artifacts to guide/index.md
 
 ### Deprecations
 *   Deprecated 'metadata_db_root' in favor of passing in
