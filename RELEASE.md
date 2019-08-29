@@ -63,7 +63,6 @@
     tfx.extensions.google_cloud_ai_platform module instead.
 *   Moved tfx.orchestration.gcp.cmle_runner to
     tfx.extensions.google_cloud_ai_platform.runner.
-*   Deprecated csv_input and tfrecord_input, use external_input instead.
 
 ## Bug fixes and other changes
 *   Updated components and code samples to use `tft.TFTransformOutput` (
@@ -116,9 +115,8 @@
     equivalent overriding functionality is now available by specifying optional
     keyword arguments (see each component class definition for details).
 *   The optional arguments "executor" and "unique_name" of component classes
-    have been uniformly renamed to "executor_spec" and "instance_name",
-    respectively.
-*   The "driver" optional argument of component classes is no longer available:
+    have been uniformly renamed to "executor_spec" and "name", respectively.
+    The "driver" optional argument of component classes is no longer available:
     users who need to override the driver for a component should subclass the
     component and override the DRIVER_CLASS field.
 *   The `example_gen.component.ExampleGen` class has been refactored into the

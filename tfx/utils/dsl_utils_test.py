@@ -25,10 +25,15 @@ from tfx.utils import dsl_utils
 
 class DslUtilsTest(tf.test.TestCase):
 
-  def testExternalInput(self):
-    [input_artifact] = dsl_utils.external_input(uri='path').get()
-    self.assertEqual('ExternalPath', input_artifact.type_name)
-    self.assertEqual('path', input_artifact.uri)
+  def testCsvInput(self):
+    [csv] = dsl_utils.csv_input(uri='path').get()
+    self.assertEqual('ExternalPath', csv.type_name)
+    self.assertEqual('path', csv.uri)
+
+  def tfrecord_input(self):
+    [tfrecord] = dsl_utils.tfrecord_input(uri='path').get()
+    self.assertEqual('ExternalPath', tfrecord.type_name)
+    self.assertEqual('path', tfrecord.uri)
 
 
 if __name__ == '__main__':
