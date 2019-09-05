@@ -22,8 +22,8 @@ import os
 import tensorflow as tf
 import tensorflow_model_analysis as tfma
 import tensorflow_transform as tft
-from tfx.examples.chicago_taxi.trainer import model
-from tfx.examples.chicago_taxi.trainer import taxi
+import model
+import taxi
 
 SERVING_MODEL_DIR = 'serving_model_dir'
 EVAL_MODEL_DIR = 'eval_model_dir'
@@ -177,8 +177,8 @@ def main():
   # Set python level verbosity
   tf.logging.set_verbosity(args.verbosity)
   # Set C++ Graph Execution level verbosity
-  os.environ['TF_CPP_MIN_LOG_LEVEL'] = str(
-      tf.logging.__dict__[args.verbosity] / 10)
+#   os.environ['TF_CPP_MIN_LOG_LEVEL'] = str(
+#       tf.logging.__dict__[args.verbosity] / 10)
 
   # Run the training job
   hparams = tf.contrib.training.HParams(**args.__dict__)

@@ -19,7 +19,7 @@ from __future__ import print_function
 import tensorflow as tf
 
 import tensorflow_model_analysis as tfma
-from tfx.examples.chicago_taxi.trainer import taxi
+import taxi
 
 
 def build_estimator(tf_transform_output, config, hidden_units=None):

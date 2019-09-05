@@ -19,7 +19,7 @@ TF_VERSION = '1.13.1'
 # LINT.ThenChange(train_aiplatform.sh, start_model_server_aiplatform.sh)
 
 # LINT.IfChange
-BEAM_VERSION = '2.13.0'
+BEAM_VERSION = '2.15.0'
 # LINT.ThenChange(setup_beam.sh)
 
 if __name__ == '__main__':
@@ -34,11 +34,11 @@ if __name__ == '__main__':
           'numpy>=1.14.5,<2',
           'protobuf>=3.7.0,<3.8.0',
           'tensorflow>=' + TF_VERSION,
-          'tensorflow-data-validation>=0.13.1,<0.14',
-          'tensorflow-metadata>=0.13,<0.14',
-          'tensorflow-model-analysis>=0.13.2,<0.14',
+          'tensorflow-data-validation>=0.14',
+          'tensorflow-metadata>=0.14',
+          'tensorflow-model-analysis>=0.14',
           'tensorflow-serving-api>=1.13.0,<1.14',
-          'tensorflow-transform>=0.13.0,<0.14',
+          'tensorflow-transform>=0.14.0',
       ],
       python_requires='>=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,<4',
   )

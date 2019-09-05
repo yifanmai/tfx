@@ -79,7 +79,40 @@ def process_tfma(eval_result_dir,
           tfma.post_export_metrics.auc_plots()
       ])
 
-  with beam.Pipeline(argv=pipeline_args) as pipeline:
+  from apache_beam.options.pipeline_options import DirectOptions
+  from apache_beam.options.pipeline_options import PipelineOptions
+  from apache_beam.portability import python_urns
+  from apache_beam.portability.api import beam_runner_api_pb2
+  from apache_beam.runners.portability import fn_api_runner
+  import sys
+
+  # multithreaded
+  direct_num_workers = 4
+  pipeline_options = PipelineOptions(pipeline_args)
+  pipeline_options.view_as(DirectOptions).direct_num_workers = direct_num_workers
+  print('Multi-threaded runner with %d workers' % direct_num_workers)
+  runner = fn_api_runner.FnApiRunner(
+      default_environment=beam_runner_api_pb2.Environment(
+        urn=python_urns.EMBEDDED_PYTHON_GRPC,
+        payload=b'1'))
+  with beam.Pipeline(options=pipeline_options, runner=runner) as pipeline:
+
+  # multiprocess
+
+  # direct_num_workers = 4
+  # pipeline_options = PipelineOptions(pipeline_args)
+  # pipeline_options.view_as(DirectOptions).direct_num_workers = direct_num_workers
+  # print('Multi-process runner with %d workers' % direct_num_workers)
+  # runner = fn_api_runner.FnApiRunner(
+  #   default_environment=beam_runner_api_pb2.Environment(
+  #     urn=python_urns.SUBPROCESS_SDK,
+  #     payload=b'%s -m apache_beam.runners.worker.sdk_worker_main' %
+  #             sys.executable.encode('ascii')))
+  # with beam.Pipeline(options=pipeline_options, runner=runner) as pipeline:
+
+  # Normal
+  # print('Default runner')
+  # with beam.Pipeline(argv=pipeline_args) as pipeline:
     if input_csv:
       csv_coder = taxi.make_csv_coder(schema)
       raw_data = (

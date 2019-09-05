@@ -27,7 +27,6 @@ python tfdv_analyze_and_validate.py \
   --stats_path $OUTPUT_DIR/train_stats.tfrecord \
   --infer_schema \
   --schema_path $SCHEMA_PATH \
-  --runner DirectRunner
 
 # Compute stats on the eval file and validate against the training schema.
 python tfdv_analyze_and_validate.py \
@@ -36,4 +35,3 @@ python tfdv_analyze_and_validate.py \
   --validate_stats \
   --schema_path $SCHEMA_PATH \
   --anomalies_path $OUTPUT_DIR/anomalies.pbtxt \
-  --runner DirectRunner

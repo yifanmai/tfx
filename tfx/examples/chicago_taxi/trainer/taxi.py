@@ -60,6 +60,9 @@ FARE_KEY = 'fare'
 
 CSV_COLUMN_NAMES = [
     'pickup_community_area',
+    'dropoff_community_area',
+    'pickup_census_tract',
+    'dropoff_census_tract',
     'fare',
     'trip_start_month',
     'trip_start_hour',
@@ -70,13 +73,29 @@ CSV_COLUMN_NAMES = [
     'dropoff_latitude',
     'dropoff_longitude',
     'trip_miles',
-    'pickup_census_tract',
-    'dropoff_census_tract',
     'payment_type',
     'company',
     'trip_seconds',
-    'dropoff_community_area',
     'tips',
+
+    # 'pickup_community_area',
+    # 'fare',
+    # 'trip_start_month',
+    # 'trip_start_hour',
+    # 'trip_start_day',
+    # 'trip_start_timestamp',
+    # 'pickup_latitude',
+    # 'pickup_longitude',
+    # 'dropoff_latitude',
+    # 'dropoff_longitude',
+    # 'trip_miles',
+    # 'pickup_census_tract',
+    # 'dropoff_census_tract',
+    # 'payment_type',
+    # 'company',
+    # 'trip_seconds',
+    # 'dropoff_community_area',
+    # 'tips',
 ]
 
 
